@@ -26,3 +26,10 @@ app.use("/api/v1", user);
 app.listen(PORT, () => {
     console.log(`App is Listening at ${PORT}`);
 })
+
+//default Route
+app.get("/", (req, res) => {
+    res.send(`<h1>This is Aman Sah</h1>`);
+})
+
+module.exports = app;
