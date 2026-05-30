@@ -23,11 +23,9 @@ const user = require("./routes/user");
 app.use("/api/v1", user);
 
 //activated server
-if (process.env.VERCEL !== '1') {
-    app.listen(PORT, () => {
-        console.log(`App is Listening at ${PORT}`);
-    })
-}
+app.listen(PORT, () => {
+    console.log(`App is Listening at ${PORT}`);
+})
 
 //default Route
 app.get("/", (req, res) => {

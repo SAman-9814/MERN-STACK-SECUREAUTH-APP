@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const jwt = require('jsonwebtoken')
@@ -8,14 +7,6 @@ require('dotenv').config();
 // signup route handler
 exports.signup = async (req, res) => {
   try {
-    // check database connection readiness
-    if (mongoose.connection.readyState !== 1) {
-      return res.status(503).json({
-        success: false,
-        message: "Database is not connected. Please verify your environment variables and MongoDB Atlas Network Access IP whitelist."
-      });
-    }
-
     // get data
     const { name, email, password, role } = req.body;
 
@@ -72,14 +63,6 @@ exports.signup = async (req, res) => {
 // login handler
 exports.login = async(req, res) => {
   try{
-    // check database connection readiness
-    if (mongoose.connection.readyState !== 1) {
-      return res.status(503).json({
-        success: false,
-        message: "Database is not connected. Please verify your environment variables and MongoDB Atlas Network Access IP whitelist."
-      });
-    }
-
     // data fetch
     const {email, password} = req.body;
 
