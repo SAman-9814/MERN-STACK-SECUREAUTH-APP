@@ -8,6 +8,15 @@ const User = require('../models/User')
 router.post('/login', login)
 router.post('/signup', signup)
 
+router.get('/health', (req, res) => {
+    const isConnected = mongoose.connection.readyState === 1;
+    res.status(isConnected ? 200 : 503).json({
+        success: isConnected,
+        dbConnected: isConnected,
+        message: isConnected ? "Database is connected successfully" : "Database connection failed. Please verify Atlas whitelisting and Vercel env settings."
+    });
+});
+
 
 // testing protected routes for single middleware
 router.get('/test', auth, (req, res) => {

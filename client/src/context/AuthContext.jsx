@@ -57,6 +57,7 @@ export const AuthProvider = ({ children }) => {
     return localStorage.getItem('theme') || 'light'; // Default to light mode
   });
   const [toasts, setToasts] = useState([]);
+  const [isDbConnected, setIsDbConnected] = useState(true);
   
   // Shared Courses state initialized with default values
   const [courses, setCourses] = useState(() => {
@@ -108,6 +109,28 @@ export const AuthProvider = ({ children }) => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
   };
+
+  const checkDbConnection = async () => {
+    try {
+      const response = await axios.get('/health');
+      if (response.data?.dbConnected) {
+        setIsDbConnected(true);
+        return true;
+      } else {
+        setIsDbConnected(false);
+        return false;
+      }
+    } catch (error) {
+      setIsDbConnected(false);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    checkDbConnection();
+    const interval = setInterval(checkDbConnection, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   const addCourse = (newCourse) => {
     setCourses((prev) => [...prev, newCourse]);
@@ -186,7 +209,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, signup, logout, getProtectedData, theme, toggleTheme, showToast, courses, addCourse }}>
+    <AuthContext.Provider value={{ user, token, loading, login, signup, logout, getProtectedData, theme, toggleTheme, showToast, courses, addCourse, isDbConnected, checkDbConnection }}>
       {!loading && children}
       <ToastContainer toasts={toasts} removeToast={(id) => setToasts((prev) => prev.filter((t) => t.id !== id))} />
     </AuthContext.Provider>
